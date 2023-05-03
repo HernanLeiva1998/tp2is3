@@ -1,0 +1,38 @@
+{% extends "layout.html" %} 
+
+{% block title %}
+    Consultas
+{% endblock %} 
+
+{% block head %} 
+{{ super() }}
+{% endblock %} 
+
+{% block content %}
+    <h1>Consultas</h1>
+    <table class="index-table box">
+    <thead>
+        <tr>
+        <th>#</th>
+        <th>Email</th>
+        <th>Título</th>
+        <th>Descripción</th>
+        <th>Estado</th>
+        <th>Creado en</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for issue in issues %}
+        <tr>
+        <th>{{ issue.id }}</th>
+        <th>{{ issue.email }}</th>
+        <th>{{ issue.title }}</th>
+        <th>{{ issue.description }}</th>
+        <th>{{ issue.status }}</th>
+        <th>{{ issue.inserted_at }}</th>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    <a href="{{ url_for('home') }}" class="more- link">Go to the home page</a>
+{% endblock %}

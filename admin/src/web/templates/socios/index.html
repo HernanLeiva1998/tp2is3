@@ -1,0 +1,140 @@
+{% extends "layout.html" %}
+{% block title %}
+Socios - Club Villa Elisa
+{%endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+  {% for message in messages %}
+  <div class="alert alert-warning" role="alert">
+    <li>{{ message }}</li>
+  </div>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<div class="table-responsive">
+  <table class="table align-middle mb-0 bg-white caption-top">
+    <caption>
+      <div class="row">
+        <div class="col-5">
+          <h4>Lista de Socios</h4>
+        </div>
+        <div class="col-7 ms-auto">
+          <div class="row">
+            <div class="col-12">
+              <form class="d-flex" method="GET" action="{{ url_for('socios.socio_index', page_num=1) }}">
+                <select class="form-control select-input me-2" aria-label="Buscar por activo" name="tipo" id="tipo">
+                  <option value="">----Seleccione una opcion----</option>
+                  <option value="true">Activo</option>
+                  <option value="false">No-Activo</option>
+                </select>
+                <input class="form-control me-2" type="search" placeholder="Buscar socio por apellido..."
+                  aria-label="Buscar por apellido" id="busqueda" name="busqueda" />
+                <button class="btn btn-outline-success" type="submit">
+                  Buscar
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </caption>
+    <thead class="bg-light">
+      <tr>
+        <th>NroSocio</th>
+        <th>Nombre</th>
+        <th>Apellido</th>
+        <th>Email</th>
+        <th>Dni</th>
+        <th>Inscribir Disciplina</th>
+        <th>Pagos</th>
+        <th>Carnet</th>
+        <th>Modificar</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for socio in socios.items %}
+      <tr>
+        <td>
+          <div class="d-flex align-items-center">
+            <div class="ms-1">
+              <p class="fw-bold mb-1">{{socio.id}}</p>
+            </div>
+          </div>
+        </td>
+        <td>
+          <p class="fw-normal mb-1">{{socio.nombre}}</p>
+        </td>
+        <td>
+          <p class="fw-normal mb-1">{{socio.apellido}}</p>
+        </td>
+        <td>
+          <p class="fw-normal mb-1">{{socio.email}}</p>
+        </td>
+        <td>
+          <p class="fw-normal mb-1">{{socio.dni}}</p>
+        </td>
+        <td>
+          <a href="{{ url_for('socios.inscripcion_socio', id=socio.id) }}" class="btn btn-primary">Inscribir</a>
+        </td>
+        <td>
+          <a href="{{ url_for('pagos.pagos_socios', id=socio.id, page_num=1) }}" class="btn btn-success">Ver Pagos</a>
+        </td>
+        <td>
+          <a href="{{url_for('carnet.view_license', id=socio.id)}}" target="_blank" class="btn btn-dark">Carnet</a>
+        </td>
+        <td>
+          <a href="{{ url_for('socios.socio_profile', id=socio.id) }}" class="btn btn-warning">Modificar</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="pagination mt-3">
+        <ul class="pagination">
+          {% if socios.has_prev %}
+          <li class="page-item">
+            <a class="page-link"
+              href="{{ url_for('socios.socio_index', page=socios.prev_num, busqueda=apellido, tipo=tipo) }}">
+              {{ '<<<' }} </a>
+          </li>
+          {% endif %} {% for number in socios.iter_pages() %} {% if socios.page
+          != number %}
+          <li class="page-item">
+            <a class="page-link" href="{{ url_for('socios.socio_index', page=number, busqueda=apellido, tipo=tipo) }}">
+              {{ number }}
+            </a>
+          </li>
+          {% else %}
+          <li class="page-item active">
+            <span class="page-link">{{ number }}</span>
+          </li>
+          {% endif %} {% endfor %} {% if socios.has_next %}
+          <li class="page-item">
+            <a class="page-link"
+              href="{{ url_for('socios.socio_index', page=socios.next_num, busqueda=apellido, tipo=tipo) }}">
+              {{ '>>>' }}
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+    <div class="col-md-4 offset-md-4 mt-3">
+      <a href="{{ url_for('socios.exportar_csv', busqueda=apellido, tipo=tipo) }}" class="btn btn-link float-md-end"
+        target="_blank">Exportar CSV</a>
+      <a href="{{ url_for('socios.exportar_pdf', busqueda=apellido, tipo=tipo) }}" class="btn btn-link float-md-end"
+        target="_blank">Exportar PDF</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

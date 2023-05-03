@@ -1,0 +1,120 @@
+{% extends "layout.html" %} 
+
+{% block title %}
+    Disciplinas - Club Villa Elisa
+{% endblock %} 
+
+{% block head %} 
+{{ super() }}
+{% endblock %} 
+
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+    <div class="alert alert-warning" role="alert">
+        <li>{{ message }}</li>
+    </div>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+    <div class="table-responsive">
+        <table class="table align-middle mb-0 bg-white caption-top">
+            <caption>
+                <div class="row">
+                  <div class="col-5">
+                    <h4>Lista de Disciplinas</h4>
+                  </div>
+                </div>
+              </caption>
+            <thead class="bg-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Categoria</th>
+                    <th>Instructores</th>
+                    <th>Horarios</th>
+                    <th>Costo</th>
+                    <th>Habilitada</th>
+                    <th>Modificar</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for disciplina in disciplinas.items %}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="ms-1">
+                                    <p class="fw-bold mb-1">{{disciplina.id}}</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <p class="fw-normal mb-1">{{disciplina.nombre}}</p>
+                        </td>
+                        <td>
+                            <p class="fw-normal mb-1">{{disciplina.categoria}}</p>
+                        </td>
+                        <td>
+                            <p class="fw-normal mb-1">{{disciplina.instructores}}</p>
+                        </td>
+                        <td>
+                            <p class="fw-normal mb-1">{{disciplina.horarios}}</p>
+                        </td>
+                        
+                        <td>
+                            <p class="fw-normal mb-1">{{disciplina.costo}}</p>
+                        </td>
+                        <td>
+                            <p class="fw-normal mb-1">{% if disciplina.habilitada %}
+                                                          {{ "Si" }} 
+                                                      {% else %}
+                                                          {{ "No" }}
+                                                      {% endif %}
+                            </p>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('disciplinas.disciplina_profile', id=disciplina.id) }}" class="btn btn-warning">Modificar</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    <div class="pagination mt-3">
+        <ul class="pagination">
+            {% if disciplinas.has_prev %}
+                <li class="page-item">
+                    <a class='page-link' href="{{ url_for('disciplinas.disciplina_index', page=disciplinas.prev_num) }}">
+                        {{ '<<<' }}
+                    </a>
+                </li>
+            {% endif %}
+        
+            {% for number in disciplinas.iter_pages() %}
+                {% if disciplinas.page != number %}
+                    <li class="page-item">
+                        <a class='page-link' href="{{ url_for('disciplinas.disciplina_index', page=number) }}">
+                            {{ number }}
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item active">
+                        <span class='page-link'>{{ number }}</span>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        
+            {% if disciplinas.has_next %}
+                <li class="page-item">
+                    <a class='page-link' href="{{ url_for('disciplinas.disciplina_index', page=disciplinas.next_num) }}">
+                        {{ '>>>' }}
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+  </div>
+{% endblock %}

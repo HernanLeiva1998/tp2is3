@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+{% block title %}
+Alta Usuarios - Club Villa Elisa
+{%endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+  {% for message in messages %}
+  <div class="alert alert-warning" role="alert">
+    <li>{{ message }}</li>
+  </div>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<div class="card">
+  <h5 class="card-header">Alta Usuarios</h5>
+  <div class="card-body">
+    <form method="POST" action="{{ url_for('usuarios.usuario_add')}}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <div class="row mb-4">
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" required />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="apellido">Apellido</label>
+            <input type="text" id="apellido" name="apellido" class="form-control" required />
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-control" required />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="username">Nombre de Usuario</label>
+            <input type="username" id="username" name="username" class="form-control" required />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="password">Password</label>
+            <input type="password" id="password" name="password" class="form-control" required />
+          </div>
+        </div>
+      </div>
+      <div class="row mb-2">
+        <div class="col mt-2">
+          <div class="form-outline">
+            <label class="form-label" for="rol_administrador">Administrador</label>
+            <input class="form-check-input" id="rol_administrador" name="rol_administrador" type="checkbox">
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="rol_operador">Operador</label>
+            <input class="form-check-input" id="rol_operador" name="rol_operador" type="checkbox">
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit button -->
+      <button type="submit" class="btn btn-primary btn-block mb-4">Aceptar</button>
+
+    </form>
+  </div>
+</div>
+{% endblock %}

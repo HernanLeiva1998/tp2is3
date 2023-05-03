@@ -1,0 +1,126 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Usuarios - Club Villa Elisa
+{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+
+<div class="table-responsive">
+    <table class="table align-middle mb-0 bg-white caption-top">
+        <caption>
+            <div class="row">
+                <div class="col-5">
+                    <h4>Lista de Usuarios</h4>
+                </div>
+                <div class="col-7 ms-auto">
+                    <div class="row">
+                        <div class="col-12">
+                            <form class="d-flex" method="GET"
+                                action="{{ url_for('usuarios.usuario_index', page_num=1) }}">
+                                <select class="form-control select-input me-2" aria-label="Buscar por activo"
+                                    name="tipo" id="tipo">
+                                    <option value="">----Seleccione una opcion----</option>
+                                    <option value="true">Activo</option>
+                                    <option value="false">No-Activo</option>
+                                </select>
+                                <input class="form-control me-2" type="search" placeholder="Buscar socio por email..."
+                                    aria-label="Buscar por email" id="busqueda" name="busqueda" />
+                                <button class="btn btn-outline-success" type="submit">
+                                    Buscar
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </caption>
+
+        <thead class="bg-light">
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th>Nombre de Usuario</th>
+                <th>Estado</th>
+                <th>Modificar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for usuario in usuarios.items %}
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <div class="ms-1">
+                            <p class="fw-bold mb-1">{{usuario.id}}</p>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <p class="fw-normal mb-1">{{usuario.nombre}}</p>
+                </td>
+                <td>
+                    <p class="fw-normal mb-1">{{usuario.apellido}}</p>
+                </td>
+                <td>
+                    <p class="fw-normal mb-1">{{usuario.email}}</p>
+                </td>
+                <td>
+                    <p class="fw-normal mb-1">{{usuario.username}}</p>
+                </td>
+                <td>
+                    {% if usuario.activo %}
+                    <p class="fw-normal mb-1">Activo</p>
+                    {% else %}
+                    <p class="fw-normal mb-1">Inactivo</p>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('usuarios.usuario_profile', id=usuario.id) }}"
+                        class="btn btn-warning">Modificar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="pagination mt-3">
+                <ul class="pagination">
+                    {% if usuarios.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="{{ url_for('usuarios.usuario_index', page=usuarios.prev_num, busqueda=email, tipo=tipo) }}">
+                            {{ '<<<' }} </a>
+                    </li>
+                    {% endif %} {% for number in usuarios.iter_pages() %} {% if usuarios.page
+                    != number %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="{{ url_for('usuarios.usuario_index', page=number, busqueda=email, tipo=tipo) }}">
+                            {{ number }}
+                        </a>
+                    </li>
+                    {% else %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ number }}</span>
+                    </li>
+                    {% endif %} {% endfor %} {% if usuarios.has_next %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="{{ url_for('usuarios.usuario_index', page=usuarios.next_num, busqueda=email, tipo=tipo) }}">
+                            {{ '>>>' }}
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

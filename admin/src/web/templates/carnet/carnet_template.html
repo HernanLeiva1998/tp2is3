@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Carnet del socio - Club Villa Elisa
+{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+
+
+<br>
+<div id="carnet" class="container" style="font-family:'Comic Sans MS','Comic Sans',cursive;width: 600px;">
+    <div class="card border-dark border border-5 text-center" style="width: 600px;">
+        <div class="row">
+            <div class="column-12">
+                <h1 style="font-family:'Brush Script MT', cursive; font-size:4rem; border-bottom:5px solid;">
+                    Club Deportivo
+                    Villa
+                    Elisa</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-5">
+                <img class="card-img-left" src="{{photo}}" width="240rem" style="border-radius:50%" ;>
+            </div>
+            <div class="col-7">
+                <div class="card-body">
+                    <span style="font-size: 1.5rem ;">{{socio.apellido}} {{socio.nombre}}</span><br>
+                    {{socio.tipo_documento}}: {{socio.dni}} <br>
+                    Socio: #{{socio.id}} <br>
+                    Fecha alta: {{socio.inserted_at.strftime('%Y-%m-%d')}}<br>
+                </div>
+            </div>
+        </div>
+        <div class=" row">
+            <div class="col-5" style="font-size: 2rem; ">
+                <br> Estado:<br>{%if estado%} Al día{%else%} No esta al día{%endif%}
+            </div>
+            <div class="col-7">
+                <img class="card-img-left" src="{{ qrcode(url) }}" width="200rem">
+            </div>
+        </div>
+        <br>
+    </div>
+</div>
+
+<br>
+
+<div class="row text-center">
+    <div>
+        <a href="{{ url_for('carnet.upload_image', id=socio.id) }}" class="btn btn-success">Subir
+            Imagen</a>
+        <a href="{{ url_for('carnet.carnet_pdf_download', id=socio.id) }}" class="btn btn-success">Descargar PDF</a>
+    </div>
+</div>
+
+<div class=" text-center">
+
+</div>
+{% endblock %}

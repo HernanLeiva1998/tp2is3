@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block title %}
+Pago de Cuota - Club Villa Elisa
+{%endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+    {% for message in messages %}
+    <div class="alert alert-warning" role="alert">
+        <li>{{ message }}</li>
+    </div>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+
+<div class="card">
+    <h5 class="card-header"> Confirmación de pago </h5>
+    <div class="card-body">
+        <div class="row mb-4">
+            Monto total: AR$ {{total}}
+        </div>
+        <div class="row mb-4"> Socio: {{pago.socio.apellido}} {{pago.socio.nombre}}</div>
+    </div>
+</div>
+<div class="col-md-12 text-center">
+    <a class="btn btn-primary btn-block mb-4" href="{{url_for('pagos.confirmar_pago', id=pago.id)}}"> Confirmar pago</a>
+</div>
+{% endblock %}

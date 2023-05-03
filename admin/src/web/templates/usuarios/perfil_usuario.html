@@ -1,0 +1,106 @@
+{% extends "layout.html" %}
+{% block title %}
+Modificacion Usuario - Club Villa Elisa
+{%endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+  {% for message in messages %}
+  <div class="alert alert-warning" role="alert">
+    <li>{{ message }}</li>
+  </div>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<div class="card">
+  <h5 class="card-header">Modificar Usuario</h5>
+  <div class="card-body">
+    <form method="POST" action="{{ url_for('usuarios.usuario_update')}}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <input type="text" id="id" name="id" value="{{usuario.id}}" hidden readonly />
+      <div class="row mb-4">
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" value="{{usuario.nombre}}" required />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="apellido">Apellido</label>
+            <input type="text" id="apellido" name="apellido" class="form-control" value="{{usuario.apellido}}"
+              required />
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-control" value="{{usuario.email}}" required />
+          </div>
+        </div>
+        {% if not rol %}
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="activo">Estado</label>
+            <select class="form-control select-input" id="activo" name="activo" required>
+              {% if usuario.activo %}
+              <option value="activo" selected>Activo</option>
+              <option value="inactivo">Inactivo</option>
+              {% else %}
+              <option value="inactivo" selected>Inactivo</option>
+              <option value="activo">Activo</option>
+              {% endif %}
+            </select>
+          </div>
+        </div>
+        {% endif %}
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="username">Nombre de Usuario</label>
+            <input type="username" id="username" name="username" class="form-control" value="{{usuario.username}}"
+              required />
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit button -->
+      <button type="submit" class="btn btn-primary btn-block mb-4">Aceptar</button>
+      {% if permiso(session["user"], "usuario_destroy")%}
+      <button type="button" class="btn btn-danger mb-4" data-bs-toggle="modal" data-bs-target="#eliminarModal">
+        Eliminar
+      </button>
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+<div class="modal" tabindex="-1" id="eliminarModal" aria-labelledby="eliminarModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Eliminar Usuario</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>¿Desea eliminar al usuario?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <a href="{{ url_for('usuarios.usuario_delete', id=usuario.id)}}" class="btn btn-primary">Aceptar</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

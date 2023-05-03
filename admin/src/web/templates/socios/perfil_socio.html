@@ -1,0 +1,135 @@
+{% extends "layout.html" %}
+{% block title %}
+Modificacion Socio - Club Villa Elisa
+{%endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+  {% for message in messages %}
+  <div class="alert alert-warning" role="alert">
+    <li>{{ message }}</li>
+  </div>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<div class="card">
+  <h5 class="card-header">Modificar Socio</h5>
+  <div class="card-body">
+    <form method="POST" action="{{ url_for('socios.socio_update')}}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+      <input type="text" id="id" name="id" value="{{socio.id}}" hidden readonly />
+      <div class="row mb-4">
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="nombre">Nombre</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" value="{{socio.nombre}}" required />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="apellido">Apellido</label>
+            <input type="text" id="apellido" name="apellido" class="form-control" value="{{socio.apellido}}" required />
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="email">Email</label>
+            <input type="email" id="email" name="email" class="form-control" value="{{socio.email}}" required />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="direccion">Direccion</label>
+            <input type="text" id="direccion" name="direccion" class="form-control" value="{{socio.direccion}}"
+              required />
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="tipo documento">Tipo documento</label>
+            <select class="form-control select-input" id="tipo_documento" name="tipo_documento" required>
+              <option value="{{socio.tipo_documento}}" selected>{{socio.tipo_documento}}</option>
+              <option value="LE">LE</option>
+              <option value="LC">LC</option>
+              <option value="DE">DE</option>
+            </select>
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="documento">Documento</label>
+            <input type="number" id="documento" name="documento" class="form-control" value="{{socio.dni}}" required />
+          </div>
+        </div>
+      </div>
+
+      <div class="row mb-4">
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="telefono">Telefono</label>
+            <input type="number" id="telefono" name="telefono" class="form-control" value="{{socio.telefono}}"
+              required />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-outline">
+            <label class="form-label" for="genero">Genero</label>
+            <select class="form-control select-input" id="genero" name="genero" required>
+              <option value="{{socio.genero}}" selected>{{socio.genero}}</option>
+              {% if socio.genero == "Femenino" or socio.genero == "femenino" %}
+              <option value="Masculino">Masculino</option>
+              <option value="Otro">Otro</option>
+              {% elif socio.genero == "Masculino" or socio.genero == "masculino" %}
+              <option value="Femenino">Femenino</option>
+              <option value="Otro">Otro</option>
+              {% else %}
+              <option value="Masculino">Masculino</option>
+              <option value="Femenino">Femenino</option>
+              {% endif %}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Submit button -->
+      <button type="submit" class="btn btn-primary btn-block mb-4">Aceptar</button>
+      {% if permiso(session["user"], "socio_destroy")%}
+      <button type="button" class="btn btn-danger mb-4" data-bs-toggle="modal" data-bs-target="#eliminarModal">
+        Eliminar
+      </button>
+      {% endif %}
+    </form>
+  </div>
+</div>
+<div class="modal" tabindex="-1" id="eliminarModal" aria-labelledby="eliminarModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Eliminar Socio</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>¿Desea eliminar al socio?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <a href="{{ url_for('socios.socio_delete', id=socio.id)}}" class="btn btn-primary">Aceptar</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

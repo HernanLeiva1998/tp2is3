@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Configuración del sistema - Club Villa Elisa
+{% endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+    {% for message in messages %}
+    <div class="alert alert-warning" role="alert">
+        <li>{{ message }}</li>
+    </div>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<div class="card">
+    <h5 classs="card-header">Configuración del sistema</h5>
+    <div class="card-body">
+        <form method="POST" action="{{url_for('configuracion_sistema.configuracion_actualizar')}}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <div class="row mb-4">
+                <div class="col">
+                    <label class="form-label" for="elementos_pagina"> Cantidad de elementos por pagina</label>
+                    <select class="form-control select-input" id="elementos_pagina" name="elementos_pagina">
+                        <option value="{{paginado.elementos_pagina}}" selected>{{paginado.elementos_pagina}}</option>
+                        <option>10</option>
+                        <option>25</option>
+                        <option>50</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <div class="form-outline">
+                        <label class="form-label" for="cuota_base">Valor de la cuota base </label>
+                        <input class="form-control" id="cuota_base" name="cuota_base" type="number" min="0"
+                            max="1000000" step="1" value="{{config.cuota_base}}">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-outline">
+                        <label class="form-label" for="porcentaje_recargo"> Porcentaje de recargo</label>
+                        <input class="form-control" id="porcentaje_recargo" name="porcentaje_recargo" type="number"
+                            min="0" max="100" step="0.1" value="{{config.porcentaje_recargo}}">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col">
+                    <div class="form-outline">
+                        <label class="form-label" for="encabezado_recibos"> Encabezado de los recibos </label>
+                        <input class="form-control" id="encabezado_recibos" name="encabezado_recibos" type="text"
+                            value="{{config.encabezado_recibos}}">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-outline">
+                        <label class="form-label" for="informacion_contacto"> Información de Contacto</label>
+                        <input class="form-control" id="informacion_contacto" name="informacion_contacto" type="text"
+                            value="{{config.informacion_contacto}}">
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col mt-2">
+                    <div class="form-outline">
+                        <label class="form-label" for="activar_pagos"> Activar pagos</label>
+                        <input class="form-check-input" id="activar_pagos" name="activar_pagos" type="checkbox"
+                            value="pagos activados" {{config.activar_pagos}}>
+                    </div>
+                </div>
+            </div>
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block mb-4">Aceptar</button>
+
+        </form>
+    </div>
+</div>
+
+{% endblock %}

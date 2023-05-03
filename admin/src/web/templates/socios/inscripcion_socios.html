@@ -1,0 +1,66 @@
+{% extends "layout.html" %} 
+{% block title %} 
+    Inscripcion Socios - Club Villa Elisa 
+{%endblock %} 
+
+{% block head %} 
+    {{ super() }} 
+{% endblock %} 
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+    <div class="alert alert-warning" role="alert">
+        <li>{{ message }}</li>
+    </div>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+<div class="card">
+    <h5 class="card-header">Inscripcion Socio</h5>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('socios.add_inscripcion') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <div class="row mb-4">
+                <div class="col-2">
+                    <label class="form-label" for="NroSocio">Nro Socio</label>
+                    <input class="form-control" type="text" id="id_socio" name="id_socio" readonly value="{{id_socio}}">
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-4">
+                    <div class="form-outline">
+                        <label class="form-label" for="Disciplina">Disciplina</label>
+                        <select class="form-control select-input" id="disciplina" name="disciplina" onchange="mostrar_categoria()" required>
+                            <option value="sin_cat" selected>-----Seleccione una disciplina-----</option>
+                            {% for disciplina in disciplinas %}
+                            <option value="{{disciplina[0]}}">{{disciplina[0]}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                {% for disciplina in categorias %}
+                <div id="{{disciplina}}" class="col-4" hidden>
+                    <div class="form-outline">
+                        <label class="form-label" for="Categoria">Categoria</label>
+                        <select class="form-control select-input" id="categoria" name="categoria" required>
+                            <option selected>-----Seleccione una categoria-----</option>
+                            {% for cat in categorias[disciplina] %}
+                            <option value="{{cat[1]}}">{{cat[0]}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+          
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary">Aceptar</button>
+          
+          </form>
+    </div>
+</div>
+{% endblock %}

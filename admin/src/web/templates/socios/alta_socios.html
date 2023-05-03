@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+{% block title %}
+Alta Socios - Club Villa Elisa
+{%endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+    {% for message in messages %}
+    <div class="alert alert-warning" role="alert">
+        <li>{{ message }}</li>
+    </div>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<div class="card">
+    <h5 class="card-header">Alta Socios</h5>
+    <div class="card-body">
+        <form method="POST" action="{{ url_for('socios.socio_add')}}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+            <div class="row mb-4">
+                <div class="col">
+                    <div class="form-outline">
+                        <label class="form-label" for="nombre">Nombre</label>
+                        <input type="text" id="nombre" name="nombre" class="form-control" required />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-outline">
+                        <label class="form-label" for="apellido">Apellido</label>
+                        <input type="text" id="apellido" name="apellido" class="form-control" required />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col">
+                    <div class="form-outline">
+                        <label class="form-label" for="email">Email</label>
+                        <input type="email" id="email" name="email" class="form-control" required />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-outline">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" id="password" name="password" class="form-control" required />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col">
+                    <div class="form-outline">
+                        <label class="form-label" for="tipo documento">Tipo documento</label>
+                        <select class="form-control select-input" id="tipo_documento" name="tipo_documento" required>
+                            <option value="DNI">DNI</option>
+                            <option value="LE">LE</option>
+                            <option value="LC">LC</option>
+                            <option value="DE">DE</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-outline">
+                        <label class="form-label" for="documento">Documento</label>
+                        <input type="number" id="documento" name="documento" class="form-control" required />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-outline">
+                        <label class="form-label" for="direccion">Direccion</label>
+                        <input type="text" id="direccion" name="direccion" class="form-control" required />
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col">
+                    <div class="form-outline">
+                        <label class="form-label" for="telefono">Telefono</label>
+                        <input type="number" id="telefono" name="telefono" class="form-control" required />
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-outline">
+                        <label class="form-label" for="genero">Genero</label>
+                        <select class="form-control select-input" id="genero" name="genero" required>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn btn-primary btn-block mb-4">Aceptar</button>
+
+        </form>
+    </div>
+</div>
+{% endblock %}

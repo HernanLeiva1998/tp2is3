@@ -1,0 +1,125 @@
+{% extends "layout.html" %}
+{% block title %}
+Pagos Socio - Club Villa Elisa
+{%endblock %}
+
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<ul class=flashes>
+  {% for message in messages %}
+  <div class="alert alert-warning" role="alert">
+    <li>{{ message }}</li>
+  </div>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<div class="table-responsive">
+  <table class="table align-middle mb-0 bg-white caption-top">
+    <caption>
+      <div class="row">
+        <div class="col-5">
+          <h4>Lista de Pagos del Socio</h4>
+        </div>
+      </div>
+    </caption>
+    <thead class="bg-light">
+      <tr>
+        <th>ID</th>
+        <th>Total</th>
+        <th>Fecha Pago</th>
+        <th>Nro Cuota</th>
+        <th>Año Cuota</th>
+        <th>Estado</th>
+        <th>Pagar</th>
+        <!--<th>Modificar</th> -->
+      </tr>
+    </thead>
+    <tbody>
+      {% for pago in pagos.items %}
+      <tr>
+        <td>
+          <div class="d-flex align-items-center">
+            <div class="ms-1">
+              <p class="fw-bold mb-1">{{pago.id}}</p>
+            </div>
+          </div>
+        </td>
+        <td>
+          <p class="fw-normal mb-1">AR$ {{pago.total}}</p>
+        </td>
+        {% if not pago.estado %}
+        <td>
+          <p class="fw-normal mb-1">Sin Fecha</p>
+        </td>
+        {% else %}
+        <td>
+          <p class="fw-normal mb-1">{{pago.fecha_pago.strftime('%Y-%m-%d')}}</p>
+        </td>
+        {% endif %}
+        <td>
+          <p class="fw-normal mb-1">{{pago.nro_cuota}}</p>
+        </td>
+        <td>
+          <p class="fw-normal mb-1">{{pago.año_cuota}}</p>
+        </td>
+        {% if not pago.estado %}
+        <td>
+          <p class="fw-normal mb-1">No Pago</p>
+        </td>
+        <td>
+          <a href="{{url_for('pagos.pagar_cuota',id=pago.id)}}" class="btn btn-success">Pagar</a>
+        </td>
+        {% else %}
+        <td>
+          <p class="fw-normal mb-1">Pago</p>
+        </td>
+        <td>
+          <a href="{{url_for('pagos.generarRecibo',id=pago.id)}}" class="btn btn-success">Recibo</a>
+        </td>
+        {% endif %}
+        <!--
+        <td>
+          <a href="#" class="btn btn-warning">Modificar</a>
+        </td>
+        -->
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <div class="pagination mt-3">
+    <ul class="pagination">
+      {% if pagos.has_prev %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for('pagos.pagos_socios', id=id_socio, page=pagos.prev_num) }}">
+          {{ '<<<' }} </a>
+      </li>
+      {% endif %}
+      {% for number in pagos.iter_pages() %} {% if pagos.page != number %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for('pagos.pagos_socios', id=id_socio, page=number) }}">
+          {{ number }}
+        </a>
+      </li>
+      {% else %}
+      <li class="page-item active">
+        <span class="page-link">{{ number }}</span>
+      </li>
+      {% endif %}
+      {% endfor %}
+      {% if pagos.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="{{ url_for('pagos.pagos_socios', id=id_socio, page=pagos.next_num) }}">
+          {{ '>>>' }}
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </div>
+</div>
+{% endblock %}
