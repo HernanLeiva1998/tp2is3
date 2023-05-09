@@ -14,7 +14,7 @@ from src.web.decorators.login import login_requerido
 from src.web.controllers.validators.common_validators import is_integer
 
 
-socio_blueprint = Blueprint("socios", __name__, url_prefix="/socios")
+socio_blueprint = Blueprint("socios", __name__, url_prefix = "/socios")
 
 
 def json_informacion_socio(id):
@@ -47,23 +47,23 @@ def socio_index():
     """Esta funcion llama al modulo correspondiente para obtener todos los socios paginados."""
     if not (has_permission(session["user"], "socio_index")):
         return abort(403)
-    page = request.args.get("page", 1, type=int)
+    page = request.args.get("page", 1, type = int)
     apellido = (
-        request.args.get("busqueda", type=str)
-        if request.args.get("busqueda", type=str) != ""
+        request.args.get("busqueda", type = str)
+        if request.args.get("busqueda", type = str) != ""
         else None
-    )
+     )
     tipo = (
-        request.args.get("tipo", type=str)
-        if request.args.get("tipo", type=str) != ""
+        request.args.get("tipo", type = str)
+        if request.args.get("tipo", type = str) != ""
         else None
-    )
+     )
     kwargs = {
         "socios": socios.listar_socios(page, apellido, tipo),
         "apellido": apellido,
         "tipo": tipo,
         "usuario": usuarios.buscar_usuario_email(session["user"]),
-    }
+     }
     return render_template("socios/index.html", **kwargs)
 
 
@@ -86,7 +86,7 @@ def socio_profile(id):
     kwargs = {
         "socio": socios.buscar_socio(id),
         "usuario": usuarios.buscar_usuario_email(session["user"]),
-    }
+     }
     return render_template("socios/perfil_socio.html", **kwargs)
 
 
@@ -104,14 +104,14 @@ def socio_add():
         "genero": request.form.get("genero"),
         "direccion": request.form.get("direccion"),
         "telefono": request.form.get("telefono"),
-    }
+     }
     validacion_inputs, mensaje = validator_socio.validar_inputs(data_socio)
     if not validacion_inputs:
         flash(mensaje)
         return redirect("/socios/alta-socio")
     validacion, mensaje = socios.validar_datos_existentes(
         data_socio["dni"], data_socio["email"], "alta"
-    )
+     )
     if not validacion:
         flash(mensaje)
         return redirect("/socios/alta-socio")
@@ -143,14 +143,15 @@ def socio_update():
         "genero": request.form.get("genero"),
         "direccion": request.form.get("direccion"),
         "telefono": request.form.get("telefono"),
-    }
+     }
     validacion_inputs, mensaje = validator_socio.validar_inputs(data_socio)
     if not validacion_inputs:
         flash(mensaje)
         return redirect("/socios/" + data_socio["id"])
     validacion_datos_existentes, mensaje = socios.validar_datos_existentes(
-        data_socio["dni"], data_socio["email"], "modificacion", data_socio["id"]
-    )
+        data_socio["dni"], data_socio["email"],
+        "modificacion", data_socio["id"]
+     )
     if not validacion_datos_existentes:
         flash(mensaje)
         return redirect("/socios/" + data_socio["id"])
@@ -179,15 +180,15 @@ def socio_delete(id):
 def exportar_csv():
     """Esta funcion genera un archivo CSV a partir de los datos solicitados de socios"""
     apellido = (
-        request.args.get("busqueda", type=str)
-        if request.args.get("busqueda", type=str) != ""
+        request.args.get("busqueda", type = str)
+        if request.args.get("busqueda", type = str) != ""
         else None
-    )
+     )
     tipo = (
-        request.args.get("tipo", type=str)
-        if request.args.get("tipo", type=str) != ""
+        request.args.get("tipo", type = str)
+        if request.args.get("tipo", type = str) != ""
         else None
-    )
+     )
     data_socios = socios.todos_los_socios(apellido, tipo)
     output = socios_CSV.generar_CSV(data_socios)
     return output
@@ -198,15 +199,15 @@ def exportar_csv():
 def exportar_pdf():
     """Esta funcion genera un archivo PDF a partir de los datos solicitados de socios"""
     apellido = (
-        request.args.get("busqueda", type=str)
-        if request.args.get("busqueda", type=str) != ""
+        request.args.get("busqueda", type = str)
+        if request.args.get("busqueda", type = str) != ""
         else None
-    )
+     )
     tipo = (
-        request.args.get("tipo", type=str)
-        if request.args.get("tipo", type=str) != ""
+        request.args.get("tipo", type = str)
+        if request.args.get("tipo", type = str) != ""
         else None
-    )
+     )
     data_socios = socios.todos_los_socios(apellido, tipo)
     output = socios_PDF.generar_PDF(data_socios)
     return output
@@ -225,7 +226,7 @@ def inscripcion_socio(id):
         "disciplinas": disciplinas.nombres_todas_las_disciplinas(),
         "categorias": disciplinas.categorias_de_cada_disciplina(),
         "usuario": usuarios.buscar_usuario_email(session["user"]),
-    }
+     }
     return render_template("/socios/inscripcion_socios.html", **kwargs)
 
 
@@ -237,7 +238,7 @@ def add_inscripcion():
     id_disciplina = request.form.get("categoria")
     validacion_inputs, message = validator_socio.validar_inscripcion(
         id_socio, id_disciplina
-    )
+     )
     if validacion_inputs:
         if socios.esta_habilitado(id_socio) and disciplinas.esta_habilitada(
             id_disciplina
