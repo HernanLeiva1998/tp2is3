@@ -27,7 +27,7 @@ def validar_inputs(data):
         return (
             False,
             "El numero de telefono debe tener 10 numeros si es celular y 7 si es de casa.",
-        )
+         )
     elif (
         data["genero"] != "Masculino"
         and data["genero"] != "Femenino"
