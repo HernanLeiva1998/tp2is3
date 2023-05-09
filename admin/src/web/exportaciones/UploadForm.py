@@ -9,9 +9,9 @@ photos = UploadSet("photos", IMAGES)
 
 class UploadForm(FlaskForm):
     photo = FileField(
-        validators=[
+        validators = [
             FileAllowed(photos, "Solo se permite subir imagenes"),
             FileRequired("El campo archivo no debería estar vacio"),
-        ]
-    )
+         ]
+     )
     submit = SubmitField("upload")
