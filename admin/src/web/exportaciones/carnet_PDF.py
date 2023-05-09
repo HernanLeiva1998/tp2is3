@@ -10,6 +10,7 @@ class PDFCarnet(FPDF):
         self.cell(200, 40, "Club Deportivo Villa Elisa", 0, 0, "L")
         self.ln(10)
 
+        
     def footer(self):
         self.set_y(-15)
         self.set_font("Arial", "I", 8)
@@ -23,8 +24,8 @@ def generar_carnet_PDF(socio, photo, url, estado):
     pdf.alias_nb_pages()
     pdf.set_font("Arial", "B", 16)
     pdf.set_font("Arial", "", 12)
-    pdf.image(photo, 5, 30, w=40, h=40)
-    pdf.cell(0, ln=1)
+    pdf.image(photo, 5, 30, w = 40, h = 40)
+    pdf.cell(0, ln = 1)
     pdf.text(60, 35, str(socio.apellido + " " + socio.nombre))
     pdf.text(60, 40, str(socio.tipo_documento + ": " + socio.dni))
     pdf.text(60, 45, str("Socio: #" + str(socio.id)))
@@ -35,13 +36,14 @@ def generar_carnet_PDF(socio, photo, url, estado):
     else:
         pdf.text(20, 85, "No esta al día")
     pdf.image(
-        "http://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=" + url + "&.png",
+        "http://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=" 
+        + url + "&.png",
         55,
         55,
-    )
-    response = make_response(pdf.output(dest="S").encode("latin-1"))
+     )
+    response = make_response(pdf.output(dest = "S").encode("latin-1"))
     response.headers.set(
-        "Content-Disposition", "attachment", filename="Carnet" + ".pdf"
-    )
+        "Content-Disposition", "attachment", filename = "Carnet" + ".pdf"
+     )
     response.headers.set("Content-Type", "application/pdf")
     return response
