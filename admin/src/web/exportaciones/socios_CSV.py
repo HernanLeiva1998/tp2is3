@@ -17,18 +17,18 @@ def generar_CSV(data_socios):
         "direccion",
         "genero",
         "activo",
-    ]
+     ]
     for dict in data_socios:
         del dict["password"]
         del dict["photo_path"]
     si = StringIO()
     with open("socios.csv", "w") as f:
-        writer = csv.DictWriter(si, fieldnames=headers)
+        writer = csv.DictWriter(si, fieldnames = headers)
         writer.writeheader()
         writer.writerows(data_socios)
         output = make_response(si.getvalue())
         output.headers.set(
-            "Content-Disposition", "attachment", filename="socios" + ".csv"
-        )
+            "Content-Disposition", "attachment", filename = "socios" + ".csv"
+         )
         output.headers.set("Content-Type", "application/csv")
     return output
