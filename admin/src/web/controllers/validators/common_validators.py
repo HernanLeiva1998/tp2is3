@@ -32,15 +32,15 @@ def is_positive_float(dato):
     return float(dato) >= 0
 
 
-def validar_longitud(dato, lenght=500):
+def validar_longitud(dato, lenght = 500):
     return len(dato) <= lenght
 
 
-def valor_fuera_de_rango_float(dato, max_value=1_000_000):
+def valor_fuera_de_rango_float(dato, max_value = 1_000_000):
     return float(dato) > max_value
 
 
-def valor_fuera_de_rango_entero(dato, max_value=1_000_000):
+def valor_fuera_de_rango_entero(dato, max_value = 1_000_000):
     return int(dato) > max_value
 
 
