@@ -32,7 +32,8 @@ def socios_por_año():
 
 
 def disciplinas_socio(id):
-    """Devuelve un json con todas las disciplinas que realiza el socio con id pasado por parametro"""
+    """Devuelve un json con todas las disciplinas que
+    realiza el socio con id pasado por parametro"""
     return json.dumps(socios.disciplinas_socio_diccionario(id))
 
 
@@ -44,7 +45,8 @@ def socios_genero():
 @socio_blueprint.route("/")
 @login_requerido
 def socio_index():
-    """Esta funcion llama al modulo correspondiente para obtener todos los socios paginados."""
+    """Esta funcion llama al modulo correspondiente 
+    para obtener todos los socios paginados."""
     if not (has_permission(session["user"], "socio_index")):
         return abort(403)
     page = request.args.get("page", 1, type = int)
@@ -70,7 +72,8 @@ def socio_index():
 @socio_blueprint.route("/alta-socio")
 @login_requerido
 def form_socio():
-    """Esta funcion devuelve el template con un formulario para dar de alta un usuario"""
+    """Esta funcion devuelve el template con 
+    un formulario para dar de alta un usuario"""
     if not (has_permission(session["user"], "socio_new")):
         return abort(403)
     kwargs = {"usuario": usuarios.buscar_usuario_email(session["user"])}
@@ -80,7 +83,8 @@ def form_socio():
 @socio_blueprint.route("/<id>")
 @login_requerido
 def socio_profile(id):
-    """Esta funcion llama al modulo correspondiente para obtener a un socio por su id."""
+    """Esta funcion llama al modulo correspondiente
+    para obtener a un socio por su id."""
     if (not is_integer(id)) or (socios.buscar_socio(id) is None):
         return abort(404)
     kwargs = {
@@ -93,7 +97,8 @@ def socio_profile(id):
 @socio_blueprint.post("/alta")
 @login_requerido
 def socio_add():
-    """Esta funcion llama al metodo correspondiente para dar de alta un socio."""
+    """Esta funcion llama al metodo correspondiente
+    para dar de alta un socio."""
     data_socio = {
         "nombre": request.form.get("nombre"),
         "apellido": request.form.get("apellido"),
@@ -127,7 +132,8 @@ def socio_add():
 @socio_blueprint.post("/modificacion")
 @login_requerido
 def socio_update():
-    """Esta funcion llama al metodo correspondiente para modificar los datos de un socio."""
+    """Esta funcion llama al metodo correspondiente
+    para modificar los datos de un socio."""
     if not (has_permission(session["user"], "socio_update")):
         return abort(403)
     socio = socios.buscar_socio(request.form.get("id"))
@@ -166,7 +172,8 @@ def socio_update():
 @socio_blueprint.route("/eliminar/<id>", methods=["DELETE", "GET"])
 @login_requerido
 def socio_delete(id):
-    """Esta funcion llama al metodo correspondiente para eliminar un socio."""
+    """Esta funcion llama al metodo correspondiente
+    para eliminar un socio."""
     if not (has_permission(session["user"], "socio_destroy")):
         return abort(403)
     if (not is_integer(id)) or (socios.buscar_socio(id) is None):
@@ -178,7 +185,8 @@ def socio_delete(id):
 @socio_blueprint.route("/exportar-csv")
 @login_requerido
 def exportar_csv():
-    """Esta funcion genera un archivo CSV a partir de los datos solicitados de socios"""
+    """Esta funcion genera un archivo CSV a partir
+    de los datos solicitados de socios"""
     apellido = (
         request.args.get("busqueda", type = str)
         if request.args.get("busqueda", type = str) != ""
@@ -197,7 +205,8 @@ def exportar_csv():
 @socio_blueprint.route("/exportar-pdf")
 @login_requerido
 def exportar_pdf():
-    """Esta funcion genera un archivo PDF a partir de los datos solicitados de socios"""
+    """Esta funcion genera un archivo PDF a partir
+    de los datos solicitados de socios"""
     apellido = (
         request.args.get("busqueda", type = str)
         if request.args.get("busqueda", type = str) != ""
@@ -216,7 +225,8 @@ def exportar_pdf():
 @socio_blueprint.route("/inscripcion-socio/<id>")
 @login_requerido
 def inscripcion_socio(id):
-    """Esta funcion retorna el formulario para la inscripcion del socio a una disciplina"""
+    """Esta funcion retorna el formulario para
+    la inscripcion del socio a una disciplina"""
     if not (has_permission(session["user"], "socio_new")):
         return abort(403)
     if (not is_integer(id)) or (socios.buscar_socio(id) is None):
@@ -233,7 +243,8 @@ def inscripcion_socio(id):
 @socio_blueprint.post("/inscripcion")
 @login_requerido
 def add_inscripcion():
-    """Esta funcion realiza la inscripcion de un socio a una disciplina"""
+    """Esta funcion realiza la inscripcion
+    de un socio a una disciplina"""
     id_socio = request.form.get("id_socio")
     id_disciplina = request.form.get("categoria")
     validacion_inputs, message = validator_socio.validar_inscripcion(
