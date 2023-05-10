@@ -1,5 +1,6 @@
 from flask import Blueprint, make_response, request, jsonify
-from flask_jwt_extended import jwt_required, get_jwt_identity, unset_jwt_cookies
+from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import unset_jwt_cookies
 from flask_jwt_extended import create_access_token, set_access_cookies
 
 from src.core.socios import find_socio_by_email_and_pass
@@ -14,7 +15,7 @@ from src.web.controllers.validators import validator_pagos
 api_blueprint = Blueprint("api", __name__, url_prefix="/api")
 
 
-def make_response_json(data, code=200):
+def make_response_json(data, code = 200):
     response = make_response(data, code)
     response.headers["Content-Type"] = "application/json"
     return response
@@ -96,21 +97,21 @@ def registrar_pago_socio():
 
 @api_blueprint.post("/auth")
 def auth():
-    """Esta funcion recibe la peticion de la api de login, en caso de estar todo correcto loguea al usuario y devuelve el token
-    jwt"""
+    """Esta funcion loguea al usuario y devuelve el token
+    jwt en caso de ser correcto"""
     if not (request.data):
-        return jsonify(message="No se envió un json."), 400
+        return jsonify(message = "No se envió un json."), 400
     json = request.get_json()
     if not (("email") in json.keys() and ("password") in json.keys()):
-        return jsonify(message="No se envió el email o la password."), 400
+        return jsonify(message = "No se envió el email o la password."), 400
     validacion, mensaje = validator_usuario.validar_inputs(json)
     if not validacion:
-        return jsonify(message=mensaje), 400
+        return jsonify(message = mensaje), 400
     socio = find_socio_by_email_and_pass(json["email"], json["password"])
     if socio is None:
-        return jsonify(message="Credenciales Invalidas"), 400
-    access_token = create_access_token(identity=socio.id)
-    response = jsonify(token=access_token)
+        return jsonify(message = "Credenciales Invalidas"), 400
+    access_token = create_access_token(identity = socio.id)
+    response = jsonify(token = access_token)
     set_access_cookies(response, access_token)
     return make_response_json(response, 201)
 
@@ -127,7 +128,7 @@ def logout_publico():
 @api_blueprint.get("/socio_jwt")
 @jwt_required()
 def socio_jwt():
-    """Esta funcion se ejecuta a la vez que el auth de la app publica, devuelve la informacion del socio en caso
+    """Esta funcion devuelve la informacion del socio en caso
     que el logueo sea exitoso"""
     socio_actual = get_jwt_identity()
     response = make_response(json_informacion_socio(socio_actual))
