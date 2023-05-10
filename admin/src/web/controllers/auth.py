@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, request, flash, url_for, session, redirect
-
+from flask import Blueprint, render_template, request
+from flask import flash, url_for, session, redirect
 from src.core import usuarios
 from src.web.controllers.validators import validator_usuario
 
@@ -16,7 +16,8 @@ def login():
 @auth_blueprint.post("/authenticate")
 def authenticate():
     """Esta funcion realiza la autenticacion de un usuario"""
-    datos = {"email": request.form.get("email"), "password": request.form.get("password")}
+    datos = {"email": request.form.get("email"),
+              "password": request.form.get("password")}
     validacion, mensaje = validator_usuario.validar_inputs(datos)
     if not validacion:
         flash(mensaje, "error")
