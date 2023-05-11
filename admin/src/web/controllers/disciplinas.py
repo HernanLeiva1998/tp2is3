@@ -1,6 +1,6 @@
 import json
 
-from flask import Blueprint, render_template, request, redirect, flash, session, abort
+from flask import blueprint, render_template, request, redirect, flash, session, abort
 
 from src.core import disciplinas
 from src.core import usuarios
@@ -10,26 +10,29 @@ from src.web.helpers.permission import has_permission
 from src.web.decorators.login import login_requerido
 
 
-disciplina_blueprint = Blueprint("disciplinas", __name__, url_prefix="/disciplinas")
+disciplina_blueprint = blueprint("disciplinas", __name__, url_prefix = "/disciplinas")
 
 
 def disciplina_json():
-    """Retorna el json con todas las disciplinas"""
+    """Retorna el json con 
+    todas las disciplinas"""
     return json.dumps(disciplinas.listar_disciplinas_diccionario())
 
 
 def disciplinas_socios():
-    """Retorna un json con la cantidad de socios por disciplina"""
+    """Retorna un json con la 
+    cantidad de socios por disciplina"""
     return json.dumps(disciplinas.socios_habilitados_por_disciplina())
 
 
 @disciplina_blueprint.route("/")
 @login_requerido
 def disciplina_index():
-    """Muestra las disciplinas de la página indicada en el request. Si no hay request, la página será la primera"""
+    """Muestra las disciplinas de la página indicada en el
+    request. Si no hay request, la página será la primera"""
     if not (has_permission(session["user"], "disciplina_index")):
         return abort(403)
-    page = request.args.get("page", 1, type=int)
+    page = request.args.get("page", 1, type = int)
     kwargs = {
         "disciplinas": disciplinas.listar_disciplinas(page),
         "usuario": usuarios.buscar_usuario_email(session["user"]),
@@ -40,7 +43,8 @@ def disciplina_index():
 @disciplina_blueprint.route("/alta-disciplina")
 @login_requerido
 def form_disciplina():
-    """Devuelve el template con el formulario para agregar una disciplina"""
+    """Devuelve el template con el 
+    formulario para agregar una disciplina"""
     if not (has_permission(session["user"], "disciplina_new")):
         return abort(403)
     kwargs = {"usuario": usuarios.buscar_usuario_email(session["user"])}
@@ -50,7 +54,8 @@ def form_disciplina():
 @disciplina_blueprint.route("/<id>")
 @login_requerido
 def disciplina_profile(id):
-    """Busca una disciplina por el id indicado en la URL y devuelve el template con el formulario para modificar una disciplina"""
+    """Busca una disciplina por el id indicado en la URL y devuelve 
+    el template con el formulario para modificar una disciplina"""
     if (not is_integer(id)) or (disciplinas.buscar_disciplina(id) is None):
         return abort(404)
     kwargs = {
@@ -63,7 +68,9 @@ def disciplina_profile(id):
 @disciplina_blueprint.post("/alta")
 @login_requerido
 def disciplina_add():
-    """Llama al validador de inputs para validar los inputs del formulario para agregar una disciplina. Si los inputs son validos, valida que la disciplina no exista ya. Si no existe, se la agrega."""
+    """Llama al validador de inputs para validar los inputs del formulario 
+    para agregar una disciplina. Si los inputs son validos, valida que la 
+    disciplina no exista ya. Si no existe, se la agrega."""
     if not (has_permission(session["user"], "disciplina_new")):
         return abort(403)
     data_disciplina = {
@@ -96,7 +103,9 @@ def disciplina_add():
 @disciplina_blueprint.post("/modificacion")
 @login_requerido
 def disciplina_update():
-    """Llama al validador de inputs para validar los inputs del formulario para modificar una disciplina. Si los inputs son validos, valida que la disciplina no exista ya. Si no existe, se la modifica."""
+    """Llama al validador de inputs para validar los inputs del formulario
+      para modificar una disciplina. Si los inputs son validos, valida que 
+      la disciplina no exista ya. Si no existe, se la modifica."""
     if not (has_permission(session["user"], "disciplina_update")):
         return abort(403)
     data_disciplina = {
@@ -128,7 +137,7 @@ def disciplina_update():
     return redirect("/disciplinas")
 
 
-@disciplina_blueprint.route("/eliminar/<id>", methods=["DELETE", "GET"])
+@disciplina_blueprint.route("/eliminar/<id>", methods = ["DELETE", "GET"])
 @login_requerido
 def disciplina_delete(id):
     """Le dice al modelo que borre la disciplina enviada"""
