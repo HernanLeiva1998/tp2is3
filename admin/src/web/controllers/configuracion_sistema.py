@@ -38,11 +38,15 @@ def configuracion_index():
     if not (has_permission(session["user"], "config_index")):
         return abort(403)
     paginado = {"paginado": configuracion_sistema.get_paginado()}
-    configuracion = {"config": configuracion_sistema.get_configuracion_general()}
+    configuracion = {
+        "config": configuracion_sistema.get_configuracion_general()
+        }
     if configuracion["config"] is None or paginado["paginado"] is None:
         configuracion_sistema.configuracion_predeterminada()
         paginado = {"paginado": configuracion_sistema.get_paginado()}
-        configuracion = {"config": configuracion_sistema.get_configuracion_general()}
+        configuracion = {
+            "config": configuracion_sistema.get_configuracion_general()
+            }
 
     if configuracion["config"].activar_pagos:
         configuracion["config"].activar_pagos = "checked"

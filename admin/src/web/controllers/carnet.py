@@ -53,7 +53,9 @@ def cargar_imagen(id):
     formulario = UploadForm()
     if formulario.validate_on_submit():
         nombre_de_archivo = photos.save(formulario.photo.data)
-        url_del_archivo = url_for("carnet.get_file", filename = nombre_de_archivo)
+        url_del_archivo = url_for(
+            "carnet.get_file", filename = nombre_de_archivo
+            )
         url_del_archivo = url_del_archivo.replace("/carnet", "")
         save_photo(id, url_del_archivo)
     else:
