@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import make_response, render_template
 
 
-class PDFCarnet(FPDF):
+class PdfCarnet(FPDF):
     def header(self):
         self.set_font("Arial", "B", 25)
         self.set_xy(0, 0)
@@ -17,14 +17,14 @@ class PDFCarnet(FPDF):
         self.cell(0, 10, "Page" + str(self.page_no()) + "/{nb}", 0, 0, "C")
 
 
-def generar_carnet_PDF(socio, photo, url, estado):
+def generar_carnet_PDF(socio, foto, url, estado):
     """Genera el pdf de una cuota paga"""
     pdf = PDFCarnet()
     pdf.add_page()
     pdf.alias_nb_pages()
     pdf.set_font("Arial", "B", 16)
     pdf.set_font("Arial", "", 12)
-    pdf.image(photo, 5, 30, w = 40, h = 40)
+    pdf.image(foto, 5, 30, w = 40, h = 40)
     pdf.cell(0, ln = 1)
     pdf.text(60, 35, str(socio.apellido + " " + socio.nombre))
     pdf.text(60, 40, str(socio.tipo_documento + ": " + socio.dni))
@@ -41,9 +41,9 @@ def generar_carnet_PDF(socio, photo, url, estado):
         55,
         55,
      )
-    response = make_response(pdf.output(dest = "S").encode("latin-1"))
-    response.headers.set(
+    respuesta = make_response(pdf.output(dest = "S").encode("latin-1"))
+    respuesta.headers.set(
         "Content-Disposition", "attachment", filename = "Carnet" + ".pdf"
      )
-    response.headers.set("Content-Type", "application/pdf")
-    return response
+    respuesta.headers.set("Content-Type", "application/pdf")
+    return respuesta
