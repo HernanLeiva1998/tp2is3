@@ -87,7 +87,7 @@ def ver_licencia(id):
         "estado": estado_socio_boolean(id),
     }
     if not la_imagen_existe(kwargs["photo"]):
-        kwargs["photo"] = get_default_photo_path()
+        kwargs["photo"] = direccion_predeterminada_de_la_foto()
     return render_template("carnet/carnet_template.html", **kwargs)
 
 
@@ -106,7 +106,7 @@ def la_imagen_existe(direccion):
     return Path(direccion).exists()
 
 
-def get_default_photo_path():
+def direccion_de_foto_predeterminada():
     """Dirección a la foto por defecto que se usa para el carnet de los socios
     sin foto cargada."""
     return "/public/uploads/default_photo.jpg"
