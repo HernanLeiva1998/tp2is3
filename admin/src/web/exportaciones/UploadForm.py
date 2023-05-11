@@ -4,14 +4,14 @@ from wtforms import SubmitField
 from flask_uploads import UploadSet, IMAGES
 
 
-photos = UploadSet("photos", IMAGES)
+fotos = UploadSet("photos", IMAGES)
 
 
 class UploadForm(FlaskForm):
-    photo = FileField(
-        validators=[
-            FileAllowed(photos, "Solo se permite subir imagenes"),
+    foto = FileField(
+        validators = [
+            FileAllowed(fotos, "Solo se permite subir imagenes"),
             FileRequired("El campo archivo no debería estar vacio"),
         ]
     )
-    submit = SubmitField("upload")
+    entregar = SubmitField("upload")
