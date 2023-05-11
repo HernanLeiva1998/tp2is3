@@ -12,6 +12,6 @@ class UploadForm(FlaskForm):
         validators = [
             FileAllowed(fotos, "Solo se permite subir imagenes"),
             FileRequired("El campo archivo no debería estar vacio"),
-         ]
-     )
+        ]
+    )
     entregar = SubmitField("upload")
