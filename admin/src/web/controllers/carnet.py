@@ -25,22 +25,24 @@ from src.web.decorators.login import login_requerido
 from src.web.controllers.validators.common_validators import is_integer
 
 
-carnet_blueprint = Blueprint("carnet", __name__, url_prefix="/carnet")
+carnet_blueprint = Blueprint("carnet", __name__, url_prefix = "/carnet")
 
 
 @carnet_blueprint.route("public/uploads/<filename>")
 @login_requerido
 def get_file(filename):
-    """Se usa para recuperar la dirección donde se guardara la foto del carnet"""
+    """Se usa para recuperar la dirección donde se guardara 
+    la foto del carnet"""
     if not (has_permission(session["user"], "carnet_photo")):
         return abort(403)
     return send_from_directory("public/uploads", filename)
 
 
-@carnet_blueprint.route("/upload_image/<id>", methods=["GET", "POST"])
+@carnet_blueprint.route("/upload_image/<id>", methods = ["GET", "POST"])
 @login_requerido
 def upload_image(id):
-    """Maneja el módulo de cargar foto para el carnet del socio tomando el id del mismo como parámetro"""
+    """Maneja el módulo de cargar foto para el carnet del socio 
+    tomando el id del mismo como parámetro"""
 
     if not (has_permission(session["user"], "carnet_upload")):
         return abort(403)
@@ -51,16 +53,20 @@ def upload_image(id):
     form = UploadForm()
     if form.validate_on_submit():
         filename = photos.save(form.photo.data)
-        file_url = url_for("carnet.get_file", filename=filename)
+        file_url = url_for("carnet.get_file", filename = filename)
         file_url = file_url.replace("/carnet", "")
         save_photo(id, file_url)
     else:
         file_url = None
         flash(
-            "Tiene que subir un archivo con extensión de imagen. Por ejemplo: .jpg, .jpeg, .png"
+            "Tiene que subir un archivo con extensión de imagen."
+            + "Por ejemplo: .jpg, .jpeg, .png"
         )
     return render_template(
-        "/carnet/upload_image.html", form=form, file_url=file_url, socio=socio
+        "/carnet/upload_image.html",
+        form = form, 
+        file_url = file_url, 
+        socio=socio
     )
 
 
@@ -94,7 +100,8 @@ def image_full_path(path):
 
 
 def image_exists(path):
-    """Comprueba si existe una imagen en la dirección que recibe por parámetro"""
+    """Comprueba si existe una imagen en 
+    la dirección que recibe por parámetro"""
     path = image_full_path(path)
     return Path(path).exists()
 

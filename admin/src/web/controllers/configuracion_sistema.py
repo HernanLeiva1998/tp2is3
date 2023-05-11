@@ -1,7 +1,14 @@
 import json
 
-from flask import Blueprint, render_template, request, redirect, flash, session, abort
-
+from flask import (
+    Blueprint, 
+    render_template, 
+    request, 
+    redirect, 
+    flash, 
+    session, 
+    abort
+)
 from src.web.helpers.permission import has_permission
 from src.core import configuracion_sistema
 from src.web.controllers.validators import validator_configuracion
@@ -9,7 +16,9 @@ from src.web.decorators.login import login_requerido
 
 
 configuracion_sistema_blueprint = Blueprint(
-    "configuracion_sistema", __name__, url_prefix="/configuracion_del_sistema"
+    "configuracion_sistema", 
+    __name__,
+    url_prefix = "/configuracion_del_sistema"
 )
 
 
@@ -41,7 +50,10 @@ def configuracion_index():
         config["config"].activar_pagos = ""
     kwargs = {**paginado, **config}
 
-    return render_template("configuracion_sistema/configuracion_sistema.html", **kwargs)
+    return render_template(
+        "configuracion_sistema/configuracion_sistema.html",
+        **kwargs
+    )
 
 
 @configuracion_sistema_blueprint.post("/update")
@@ -63,11 +75,15 @@ def configuracion_actualizar():
         "cuota_base": request.form.get("cuota_base"),
         "porcentaje_recargo": request.form.get("porcentaje_recargo"),
     }
-    inputs_validos, mensaje = validator_configuracion.validar_inputs(configuracion)
+    inputs_validos, mensaje = (
+        validator_configuracion.validar_inputs(configuracion)
+    )
     if not inputs_validos:
         flash(mensaje)
         return redirect("/configuracion_del_sistema/")
-    configuracion["activar_pagos"] = configuracion["activar_pagos"] == "pagos activados"
+    configuracion["activar_pagos"] = (
+        configuracion["activar_pagos"] == "pagos activados"
+    )
     paginado = {"elementos_pagina": configuracion["elementos_pagina"]}
     configuracion_sistema.modificar_configuracion(configuracion, paginado)
     return redirect("/configuracion_del_sistema/")
