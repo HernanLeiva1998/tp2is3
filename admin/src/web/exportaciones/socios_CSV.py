@@ -17,7 +17,7 @@ def generar_CSV(datos_socios):
         "direccion",
         "genero",
         "activo",
-     ]
+    ]
     for dict in datos_socios:
         del dict["password"]
         del dict["photo_path"]
@@ -29,6 +29,6 @@ def generar_CSV(datos_socios):
         salida = make_response(si.getvalue())
         salida.headers.set(
             "Content-Disposition", "attachment", filename = "socios" + ".csv"
-         )
+        )
         salida.headers.set("Content-Type", "application/csv")
     return salida
