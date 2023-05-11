@@ -13,7 +13,8 @@ def validar_inputs(dato):
 
     email_regular = "^[A-Za-z0-9]+[\._]?[A-Za-z0-9]+[@]\w+[.]\w{2,3}$"
     if not (dato["dni"].isdigit() and dato["telefono"].isdigit()):
-        return False, "El telefono y dni deben ser solo numeros, sin guiones ni puntos."
+        return (False,
+                "El telefono y dni deben ser solo numeros, sin guiones ni puntos.")
     elif not (
         re.fullmatch(r"[A-Za-z ]{1,50}", dato["nombre"])
         and re.fullmatch(r"[A-Za-z ]{1,50}", dato["apellido"])
