@@ -4,7 +4,7 @@ from io import StringIO
 from flask import make_response
 
 
-def generar_CSV(data_socios):
+def generar_CSV(datos_socios):
     """Esta funcion retorna un CSV con todos los datos de los socios"""
     headers = [
         "nro_socio",
@@ -18,17 +18,17 @@ def generar_CSV(data_socios):
         "genero",
         "activo",
      ]
-    for dict in data_socios:
+    for dict in datos_socios:
         del dict["password"]
         del dict["photo_path"]
     si = StringIO()
     with open("socios.csv", "w") as f:
-        writer = csv.DictWriter(si, fieldnames = headers)
-        writer.writeheader()
-        writer.writerows(data_socios)
-        output = make_response(si.getvalue())
-        output.headers.set(
+        escritor = csv.DictWriter(si, fieldnames = headers)
+        escritor.writeheader()
+        escritor.writerows(datos_socios)
+        salida = make_response(si.getvalue())
+        salida.headers.set(
             "Content-Disposition", "attachment", filename = "socios" + ".csv"
          )
-        output.headers.set("Content-Type", "application/csv")
-    return output
+        salida.headers.set("Content-Type", "application/csv")
+    return salida
