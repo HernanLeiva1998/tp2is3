@@ -41,14 +41,14 @@ def generar_recibo_PDF(dato):
         + " del año "
         + str(dato["pago"].año_cuota),
         ln = 1,
-     )
+    )
     pdf.cell(0, y_height, "", ln=1)
     pdf.cell(
         180,
         y_height,
         "Socio: " + dato["pago"].socio.apellido + " " + dato["pago"].socio.nombre,
-        ln=1,
-     )
+        ln = 1,
+    )
 
     pdf.cell(0, y_height, "", ln = 1)
     pdf.cell(180, y_height, "Disciplinas:", ln = 1)
@@ -63,7 +63,7 @@ def generar_recibo_PDF(dato):
             150,
             y_height,
             "-" + disciplina.nombre + " Categoría: " + disciplina.categoria,
-         )
+        )
         pdf.cell(30, y_height, "$" + str(disciplina.costo), ln = 1)
 
     pdf.cell(150, y_height, "Costo total de disciplinas:")
