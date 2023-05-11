@@ -26,7 +26,7 @@ def validar_inputs(data):
         return (
             False,
             'El formato de los horarios es incorrecto, debe ser "Dia1 Dia2 (opcional) de X a Yhs"',
-         )
+        )
     return True, "Los datos son validos"
 
 
