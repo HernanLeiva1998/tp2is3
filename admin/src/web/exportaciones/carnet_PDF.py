@@ -40,10 +40,10 @@ def generar_carnet_PDF(socio, foto, url, estado):
         + url + "&.png",
         55,
         55,
-     )
+    )
     respuesta = make_response(pdf.output(dest = "S").encode("latin-1"))
     respuesta.headers.set(
         "Content-Disposition", "attachment", filename = "Carnet" + ".pdf"
-     )
+    )
     respuesta.headers.set("Content-Type", "application/pdf")
     return respuesta
