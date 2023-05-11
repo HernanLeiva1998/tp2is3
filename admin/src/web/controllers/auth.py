@@ -22,16 +22,16 @@ def authenticate():
     if not validacion:
         flash(mensaje, "error")
         return redirect(url_for("auth.login"))
-    user = usuarios.find_user_by_mail_and_pass(datos["email"], datos["password"])
-    if user is None:
+    usuario = usuarios.buscar_usuario_email(datos["email"], datos["password"])
+    if usuario is None:
         flash("Credenciales invalidas", "error")
         return redirect(url_for("auth.login"))
-    elif not user.activo:
+    elif not usuario.activo:
         flash("Usted no tiene permitido acceder al sistema", "error")
         return redirect(url_for("auth.login"))
-    session["user"] = user.email
-    session["nombre"] = user.nombre
-    session["apellido"] = user.apellido
+    session["user"] = usuario.email
+    session["nombre"] = usuario.nombre
+    session["apellido"] = usuario.apellido
     flash("Sesión iniciada correctamente")
     return redirect(url_for("home"))
 
