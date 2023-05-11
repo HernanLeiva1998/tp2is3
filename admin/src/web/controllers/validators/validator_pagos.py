@@ -1,18 +1,18 @@
 from src.web.controllers.validators.common_validators import (
-    is_integer,
-    dict_values_are_none,
-    dict_values_are_empty,
+    es_entero,
+    valores_dicc_none,
+    valores_dicc_vacios,
 )
 
 
 def validar_inputs(json):
     # El json en sí siempre va a ser enviado, por cómo está definido
     # el frontend y por tener el jwt_required en la api.
-    if dict_values_are_none(json) or dict_values_are_empty(json):
+    if valores_dicc_none(json) or valores_dicc_vacios(json):
         return False  # El mes y el monto deben estar presentes
-    if not is_integer(json["month"]):
+    if not es_entero(json["month"]):
         return False  # El mes no es un número
-    if not is_integer(json["amount"]):
+    if not es_entero(json["amount"]):
         return False  # El monto no es un número
     if not es_mes(json["month"]):
         return False  # El mes no es un mes
