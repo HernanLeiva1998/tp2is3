@@ -51,6 +51,6 @@ def generar_PDF(datos_socios):
         pdf.cell(40, y_altura, socio["direccion"], border = 1, ln = 1)
     respuesta = make_response(pdf.output(dest = "S").encode("latin-1"))
     respuesta.headers.set("Content-Disposition",
-                         "attachment", filename="socios" + ".pdf")
+                         "attachment", filename = "socios" + ".pdf")
     respuesta.headers.set("Content-Type", "application/pdf")
     return respuesta
