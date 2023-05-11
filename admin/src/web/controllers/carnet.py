@@ -30,7 +30,7 @@ carnet_blueprint = Blueprint("carnet", __name__, url_prefix = "/carnet")
 
 @carnet_blueprint.route("public/uploads/<filename>")
 @login_requerido
-def get_file(nombre_de_archivo):
+def conseguir_archivo(nombre_de_archivo):
     """Se usa para recuperar la dirección donde se guardara 
     la foto del carnet"""
     if not (has_permission(session["user"], "carnet_photo")):
@@ -40,7 +40,7 @@ def get_file(nombre_de_archivo):
 
 @carnet_blueprint.route("/upload_image/<id>", methods = ["GET", "POST"])
 @login_requerido
-def upload_image(id):
+def cargar_imagen(id):
     """Maneja el módulo de cargar foto para el carnet del socio 
     tomando el id del mismo como parámetro"""
 
@@ -72,7 +72,7 @@ def upload_image(id):
 
 @carnet_blueprint.route("/<id>")
 @login_requerido
-def view_license(id):
+def ver_licencia(id):
     """Maneja el módulo de mostrar el carnet de un socio existente."""
     if not (has_permission(session["user"], "carnet_license")):
         return abort(403)
@@ -86,12 +86,12 @@ def view_license(id):
         "photo": get_photo_socio(id),
         "estado": estado_socio_boolean(id),
     }
-    if not image_exists(kwargs["photo"]):
+    if not la_imagen_existe(kwargs["photo"]):
         kwargs["photo"] = get_default_photo_path()
     return render_template("carnet/carnet_template.html", **kwargs)
 
 
-def image_full_path(direccion):
+def direccion_completa_de_la_imagen(direccion):
     """Devuelve la dirección verdadera del parametro path.
     path guarda la dirección local del archivo, para conseguir
     la dirección verdadera necesita concatenar path con la dirección
@@ -99,10 +99,10 @@ def image_full_path(direccion):
     return str(Path(__file__).parent.parent.parent.parent) + direccion
 
 
-def image_exists(direccion):
+def la_imagen_existe(direccion):
     """Comprueba si existe una imagen en 
     la dirección que recibe por parámetro"""
-    direccion = image_full_path(direccion)
+    direccion = direccion_completa_de_la_imagen(direccion)
     return Path(direccion).exists()
 
 
@@ -114,7 +114,7 @@ def get_default_photo_path():
 
 @carnet_blueprint.route("/download/<id>")
 @login_requerido
-def carnet_pdf_download(id):
+def descarga_carnet_pdf(id):
     """Importa un pdf con los datos del carnet del socio que se corresponda
     al id que se recibe como parámetro"""
     if not (has_permission(session["user"], "carnet_download")):
@@ -123,7 +123,7 @@ def carnet_pdf_download(id):
         return abort(404)
 
     socio = buscar_socio(id)
-    direccion = image_full_path(get_photo_socio(id))
+    direccion = direccion_completa_de_la_imagen(get_photo_socio(id))
     kwargs = {
         "socio": socio,
         "photo": direccion,
