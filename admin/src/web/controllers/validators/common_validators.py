@@ -1,26 +1,26 @@
-llaves_ignoradas = ["activar_pagos"]
+ignored_keys = ["activar_pagos"]
 
 
-def valores_dicc_none(dato):
-    for value in dato.values():
+def dict_values_are_none(data):
+    for value in data.values():
         if value is None:
             return True
     return False
 
 
-def valores_dicc_vacios(dato):
+def dict_values_are_empty(data):
     """La key activar_pagos puede estar vacía."""
-    for key, value in dato.items():
-        if value == "" and key not in llaves_ignoradas:
+    for key, value in data.items():
+        if value == "" and key not in ignored_keys:
             return True
     return False
 
 
-def es_entero(dato):
+def is_integer(dato):
     return dato.lstrip("-").isdigit()
 
 
-def es_float(dato):
+def is_float(dato):
     try:
         float(dato)
     except ValueError:
@@ -28,20 +28,20 @@ def es_float(dato):
     return True
 
 
-def es_float_positivo(dato):
+def is_positive_float(dato):
     return float(dato) >= 0
 
 
-def validar_longitud(dato, longitud=500):
-    return len(dato) <= longitud
+def validar_longitud(dato, lenght=500):
+    return len(dato) <= lenght
 
 
-def valor_fuera_de_rango_float(dato, valor_max=1_000_000):
-    return float(dato) > valor_max
+def valor_fuera_de_rango_float(dato, max_value=1_000_000):
+    return float(dato) > max_value
 
 
-def valor_fuera_de_rango_entero(dato, valor_max=1_000_000):
-    return int(dato) > valor_max
+def valor_fuera_de_rango_entero(dato, max_value=1_000_000):
+    return int(dato) > max_value
 
 
 def valor_es_negativo_entero(costo):
