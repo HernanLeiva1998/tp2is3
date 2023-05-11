@@ -28,53 +28,53 @@ def generar_recibo_PDF(dato):
     pdf.cell(500, 30, dato["encabezado"], ln = 1)
 
     pdf.set_font("Arial", "B", 12)
-    y_height = 5
+    y_altura = 5
     pdf.set_xy(0, 50)
     pdf.cell(15)
-    pdf.cell(70, y_height, "Número de recibo: " + str(dato["pago"].id))
+    pdf.cell(70, y_altura, "Número de recibo: " + str(dato["pago"].id))
     pdf.cell(15)
     pdf.cell(
         70,
-        y_height,
+        y_altura,
         "Cuota numero "
         + str(dato["pago"].nro_cuota)
         + " del año "
         + str(dato["pago"].año_cuota),
         ln = 1,
     )
-    pdf.cell(0, y_height, "", ln=1)
+    pdf.cell(0, y_altura, "", ln=1)
     pdf.cell(
         180,
-        y_height,
+        y_altura,
         "Socio: " + dato["pago"].socio.apellido + " " + dato["pago"].socio.nombre,
         ln = 1,
     )
 
-    pdf.cell(0, y_height, "", ln = 1)
-    pdf.cell(180, y_height, "Disciplinas:", ln = 1)
+    pdf.cell(0, y_altura, "", ln = 1)
+    pdf.cell(180, y_altura, "Disciplinas:", ln = 1)
 
     total_disciplinas = dato["cuota_base"]
-    pdf.cell(150, y_height, "-Cuota basica ")
-    pdf.cell(30, y_height, "$" + str(dato["cuota_base"]), ln = 1)
+    pdf.cell(150, y_altura, "-Cuota basica ")
+    pdf.cell(30, y_altura, "$" + str(dato["cuota_base"]), ln = 1)
 
     for disciplina in dato["pago"].socio.disciplinas:
         total_disciplinas = total_disciplinas + float(disciplina.costo)
         pdf.cell(
             150,
-            y_height,
+            y_altura,
             "-" + disciplina.nombre + " Categoría: " + disciplina.categoria,
         )
-        pdf.cell(30, y_height, "$" + str(disciplina.costo), ln = 1)
+        pdf.cell(30, y_altura, "$" + str(disciplina.costo), ln = 1)
 
-    pdf.cell(150, y_height, "Costo total de disciplinas:")
-    pdf.cell(30, y_height, "$" + str(total_disciplinas))
+    pdf.cell(150, y_altura, "Costo total de disciplinas:")
+    pdf.cell(30, y_altura, "$" + str(total_disciplinas))
     pdf.cell(0, 10, "", ln=1)
-    pdf.cell(150, y_height, "Porcentaje de recargo para cuotas vencidas: ")
-    pdf.cell(30, y_height, "%" + str(dato["recargo"]), ln = 1)
-    pdf.cell(150, y_height, "Monto total:")
-    pdf.cell(30, y_height, "$" + str(dato["pago"].total), ln = 1)
-    pdf.cell(150, y_height, "Fecha de pago:")
-    pdf.cell(30, y_height, 
+    pdf.cell(150, y_altura, "Porcentaje de recargo para cuotas vencidas: ")
+    pdf.cell(30, y_altura, "%" + str(dato["recargo"]), ln = 1)
+    pdf.cell(150, y_altura, "Monto total:")
+    pdf.cell(30, y_altura, "$" + str(dato["pago"].total), ln = 1)
+    pdf.cell(150, y_altura, "Fecha de pago:")
+    pdf.cell(30, y_altura, 
              str(data["pago"].fecha_pago.strftime("%Y-%m-%d")), ln = 1)
 
     pdf.set_font("Arial", "", 12)
