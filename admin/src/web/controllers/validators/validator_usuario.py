@@ -8,7 +8,7 @@ from src.web.controllers.validators.common_validators import (
 EMAIL_REGULAR = "^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$"
 
 
-def validar_inputs_add(dato, roles):
+def validar_inputs_agregar(dato, roles):
     """Esta funcion valida que los inputs sean
     del tipo correcto durante la adición."""
     if valores_dicc_none(dato) or valores_dicc_vacios(dato):
