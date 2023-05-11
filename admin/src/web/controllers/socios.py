@@ -11,7 +11,7 @@ from src.web.exportaciones import socios_PDF
 from src.web.helpers.permission import has_permission
 from src.web.controllers.validators import validator_socio
 from src.web.decorators.login import login_requerido
-from src.web.controllers.validators.common_validators import is_integer
+from src.web.controllers.validators.common_validators import es_entero
 
 
 socio_blueprint = Blueprint("socios", __name__, url_prefix = "/socios")
@@ -49,29 +49,29 @@ def socio_index():
     para obtener todos los socios paginados."""
     if not (has_permission(session["user"], "socio_index")):
         return abort(403)
-    page = request.args.get("page", 1, type = int)
+    pagina = request.args.get("page", 1, type = int)
     apellido = (
         request.args.get("busqueda", type = str)
         if request.args.get("busqueda", type = str) != ""
         else None
-     )
+    )
     tipo = (
         request.args.get("tipo", type = str)
         if request.args.get("tipo", type = str) != ""
         else None
-     )
+    )
     kwargs = {
-        "socios": socios.listar_socios(page, apellido, tipo),
+        "socios": socios.listar_socios(pagina, apellido, tipo),
         "apellido": apellido,
         "tipo": tipo,
         "usuario": usuarios.buscar_usuario_email(session["user"]),
-     }
+    }
     return render_template("socios/index.html", **kwargs)
 
 
 @socio_blueprint.route("/alta-socio")
 @login_requerido
-def form_socio():
+def socio_formulario():
     """Esta funcion devuelve el template con 
     un formulario para dar de alta un usuario"""
     if not (has_permission(session["user"], "socio_new")):
@@ -82,10 +82,10 @@ def form_socio():
 
 @socio_blueprint.route("/<id>")
 @login_requerido
-def socio_profile(id):
+def socio_perfil(id):
     """Esta funcion llama al modulo correspondiente
     para obtener a un socio por su id."""
-    if (not is_integer(id)) or (socios.buscar_socio(id) is None):
+    if (not es_entero(id)) or (socios.buscar_socio(id) is None):
         return abort(404)
     kwargs = {
         "socio": socios.buscar_socio(id),
@@ -96,10 +96,10 @@ def socio_profile(id):
 
 @socio_blueprint.post("/alta")
 @login_requerido
-def socio_add():
+def socio_agregar():
     """Esta funcion llama al metodo correspondiente
     para dar de alta un socio."""
-    data_socio = {
+    datos_socio = {
         "nombre": request.form.get("nombre"),
         "apellido": request.form.get("apellido"),
         "email": request.form.get("email"),
@@ -109,36 +109,36 @@ def socio_add():
         "genero": request.form.get("genero"),
         "direccion": request.form.get("direccion"),
         "telefono": request.form.get("telefono"),
-     }
-    validacion_inputs, mensaje = validator_socio.validar_inputs(data_socio)
+    }
+    validacion_inputs, mensaje = validator_socio.validar_inputs(datos_socio)
     if not validacion_inputs:
         flash(mensaje)
         return redirect("/socios/alta-socio")
     validacion, mensaje = socios.validar_datos_existentes(
-        data_socio["dni"], data_socio["email"], "alta"
-     )
+        datos_socio["dni"], datos_socio["email"], "alta"
+    )
     if not validacion:
         flash(mensaje)
         return redirect("/socios/alta-socio")
     data_socio["activo"] = True
-    data_socio["nombre"] = data_socio["nombre"].capitalize()
-    data_socio["apellido"] = data_socio["apellido"].capitalize()
+    data_socio["nombre"] = datos_socio["nombre"].capitalize()
+    data_socio["apellido"] = datos_socio["apellido"].capitalize()
 
-    socio = socios.agregar_socio(data_socio)
+    socio = socios.agregar_socio(datos_socio)
     pagos.generar_pagos(socio.id)
     return redirect("/socios")
 
 
 @socio_blueprint.post("/modificacion")
 @login_requerido
-def socio_update():
+def socio_actualizar():
     """Esta funcion llama al metodo correspondiente
     para modificar los datos de un socio."""
     if not (has_permission(session["user"], "socio_update")):
         return abort(403)
     socio = socios.buscar_socio(request.form.get("id"))
     password = socio.password
-    data_socio = {
+    datos_socio = {
         "id": request.form.get("id"),
         "nombre": request.form.get("nombre"),
         "apellido": request.form.get("apellido"),
@@ -149,34 +149,34 @@ def socio_update():
         "genero": request.form.get("genero"),
         "direccion": request.form.get("direccion"),
         "telefono": request.form.get("telefono"),
-     }
-    validacion_inputs, mensaje = validator_socio.validar_inputs(data_socio)
+    }
+    validacion_inputs, mensaje = validator_socio.validar_inputs(datos_socio)
     if not validacion_inputs:
         flash(mensaje)
-        return redirect("/socios/" + data_socio["id"])
+        return redirect("/socios/" + datos_socio["id"])
     validacion_datos_existentes, mensaje = socios.validar_datos_existentes(
-        data_socio["dni"], data_socio["email"],
-        "modificacion", data_socio["id"]
-     )
+        data_socio["dni"], datos_socio["email"],
+        "modificacion", datos_socio["id"]
+    )
     if not validacion_datos_existentes:
         flash(mensaje)
-        return redirect("/socios/" + data_socio["id"])
-    data_socio["activo"] = True
-    data_socio["nombre"] = data_socio["nombre"].capitalize()
-    data_socio["apellido"] = data_socio["apellido"].capitalize()
+        return redirect("/socios/" + datos_socio["id"])
+    datos_socio["activo"] = True
+    datos_socio["nombre"] = datos_socio["nombre"].capitalize()
+    datos_socio["apellido"] = datos_socio["apellido"].capitalize()
 
-    socios.modificar_socio(data_socio)
+    socios.modificar_socio(datos_socio)
     return redirect("/socios")
 
 
 @socio_blueprint.route("/eliminar/<id>", methods=["DELETE", "GET"])
 @login_requerido
-def socio_delete(id):
+def socio_eliminar(id):
     """Esta funcion llama al metodo correspondiente
     para eliminar un socio."""
     if not (has_permission(session["user"], "socio_destroy")):
         return abort(403)
-    if (not is_integer(id)) or (socios.buscar_socio(id) is None):
+    if (not es_entero(id)) or (socios.buscar_socio(id) is None):
         return abort(404)
     socios.eliminar_socio(id)
     return redirect("/socios")
@@ -191,14 +191,14 @@ def exportar_csv():
         request.args.get("busqueda", type = str)
         if request.args.get("busqueda", type = str) != ""
         else None
-     )
+    )
     tipo = (
         request.args.get("tipo", type = str)
         if request.args.get("tipo", type = str) != ""
         else None
-     )
-    data_socios = socios.todos_los_socios(apellido, tipo)
-    output = socios_CSV.generar_CSV(data_socios)
+    )
+    datos_socio = socios.todos_los_socios(apellido, tipo)
+    output = socios_CSV.generar_CSV(datos_socio)
     return output
 
 
@@ -211,14 +211,14 @@ def exportar_pdf():
         request.args.get("busqueda", type = str)
         if request.args.get("busqueda", type = str) != ""
         else None
-     )
+    )
     tipo = (
         request.args.get("tipo", type = str)
         if request.args.get("tipo", type = str) != ""
         else None
-     )
-    data_socios = socios.todos_los_socios(apellido, tipo)
-    output = socios_PDF.generar_PDF(data_socios)
+    )
+    datos_socio = socios.todos_los_socios(apellido, tipo)
+    output = socios_PDF.generar_PDF(datos_socio)
     return output
 
 
@@ -229,14 +229,14 @@ def inscripcion_socio(id):
     la inscripcion del socio a una disciplina"""
     if not (has_permission(session["user"], "socio_new")):
         return abort(403)
-    if (not is_integer(id)) or (socios.buscar_socio(id) is None):
+    if (not es_entero(id)) or (socios.buscar_socio(id) is None):
         return abort(404)
     kwargs = {
         "id_socio": id,
         "disciplinas": disciplinas.nombres_todas_las_disciplinas(),
         "categorias": disciplinas.categorias_de_cada_disciplina(),
         "usuario": usuarios.buscar_usuario_email(session["user"]),
-     }
+    }
     return render_template("/socios/inscripcion_socios.html", **kwargs)
 
 
@@ -249,7 +249,7 @@ def add_inscripcion():
     id_disciplina = request.form.get("categoria")
     validacion_inputs, message = validator_socio.validar_inscripcion(
         id_socio, id_disciplina
-     )
+    )
     if validacion_inputs:
         if socios.esta_habilitado(id_socio) and disciplinas.esta_habilitada(
             id_disciplina
