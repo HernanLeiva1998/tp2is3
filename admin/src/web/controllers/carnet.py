@@ -30,12 +30,12 @@ carnet_blueprint = Blueprint("carnet", __name__, url_prefix = "/carnet")
 
 @carnet_blueprint.route("public/uploads/<filename>")
 @login_requerido
-def get_file(filename):
+def get_file(nombre_de_archivo):
     """Se usa para recuperar la dirección donde se guardara 
     la foto del carnet"""
     if not (has_permission(session["user"], "carnet_photo")):
         return abort(403)
-    return send_from_directory("public/uploads", filename)
+    return send_from_directory("public/uploads", nombre_de_archivo)
 
 
 @carnet_blueprint.route("/upload_image/<id>", methods = ["GET", "POST"])
@@ -50,22 +50,22 @@ def upload_image(id):
         return abort(404)
 
     socio = buscar_socio(id)
-    form = UploadForm()
-    if form.validate_on_submit():
-        filename = photos.save(form.photo.data)
-        file_url = url_for("carnet.get_file", filename = filename)
-        file_url = file_url.replace("/carnet", "")
-        save_photo(id, file_url)
+    formulario = UploadForm()
+    if formulario.validate_on_submit():
+        nombre_de_archivo = photos.save(formulario.photo.data)
+        url_del_archivo = url_for("carnet.get_file", filename = nombre_de_archivo)
+        url_del_archivo = url_del_archivo.replace("/carnet", "")
+        save_photo(id, url_del_archivo)
     else:
-        file_url = None
+        url_del_archivo = None
         flash(
             "Tiene que subir un archivo con extensión de imagen."
             + "Por ejemplo: .jpg, .jpeg, .png"
         )
     return render_template(
         "/carnet/upload_image.html",
-        form = form, 
-        file_url = file_url, 
+        form = formulario, 
+        file_url = url_del_archivo, 
         socio=socio
     )
 
@@ -91,19 +91,19 @@ def view_license(id):
     return render_template("carnet/carnet_template.html", **kwargs)
 
 
-def image_full_path(path):
+def image_full_path(direccion):
     """Devuelve la dirección verdadera del parametro path.
     path guarda la dirección local del archivo, para conseguir
     la dirección verdadera necesita concatenar path con la dirección
      verdadera de la carpeta admin"""
-    return str(Path(__file__).parent.parent.parent.parent) + path
+    return str(Path(__file__).parent.parent.parent.parent) + direccion
 
 
-def image_exists(path):
+def image_exists(direccion):
     """Comprueba si existe una imagen en 
     la dirección que recibe por parámetro"""
-    path = image_full_path(path)
-    return Path(path).exists()
+    direccion = image_full_path(direccion)
+    return Path(direccion).exists()
 
 
 def get_default_photo_path():
@@ -123,12 +123,12 @@ def carnet_pdf_download(id):
         return abort(404)
 
     socio = buscar_socio(id)
-    path = image_full_path(get_photo_socio(id))
+    direccion = image_full_path(get_photo_socio(id))
     kwargs = {
         "socio": socio,
-        "photo": path,
+        "photo": direccion,
         "url": url_for("carnet.view_license", id=id),
         "estado": estado_socio_boolean(id),
     }
-    outpot = carnet_PDF.generar_carnet_PDF(**kwargs)
-    return outpot
+    archivo_pdf = carnet_PDF.generar_carnet_PDF(**kwargs)
+    return archivo_pdf

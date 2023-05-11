@@ -38,17 +38,17 @@ def configuracion_index():
     if not (has_permission(session["user"], "config_index")):
         return abort(403)
     paginado = {"paginado": configuracion_sistema.get_paginado()}
-    config = {"config": configuracion_sistema.get_configuracion_general()}
-    if config["config"] is None or paginado["paginado"] is None:
+    configuracion = {"config": configuracion_sistema.get_configuracion_general()}
+    if configuracion["config"] is None or paginado["paginado"] is None:
         configuracion_sistema.configuracion_predeterminada()
         paginado = {"paginado": configuracion_sistema.get_paginado()}
-        config = {"config": configuracion_sistema.get_configuracion_general()}
+        configuracion = {"config": configuracion_sistema.get_configuracion_general()}
 
-    if config["config"].activar_pagos:
-        config["config"].activar_pagos = "checked"
+    if configuracion["config"].activar_pagos:
+        configuracion["config"].activar_pagos = "checked"
     else:
-        config["config"].activar_pagos = ""
-    kwargs = {**paginado, **config}
+        configuracion["config"].activar_pagos = ""
+    kwargs = {**paginado, **configuracion}
 
     return render_template(
         "configuracion_sistema/configuracion_sistema.html",
