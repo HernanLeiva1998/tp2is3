@@ -42,7 +42,7 @@ def generar_recibo_PDF(dato):
         + str(dato["pago"].año_cuota),
         ln = 1,
     )
-    pdf.cell(0, y_altura, "", ln=1)
+    pdf.cell(0, y_altura, "", ln = 1)
     pdf.cell(
         180,
         y_altura,
@@ -68,7 +68,7 @@ def generar_recibo_PDF(dato):
 
     pdf.cell(150, y_altura, "Costo total de disciplinas:")
     pdf.cell(30, y_altura, "$" + str(total_disciplinas))
-    pdf.cell(0, 10, "", ln=1)
+    pdf.cell(0, 10, "", ln = 1)
     pdf.cell(150, y_altura, "Porcentaje de recargo para cuotas vencidas: ")
     pdf.cell(30, y_altura, "%" + str(dato["recargo"]), ln = 1)
     pdf.cell(150, y_altura, "Monto total:")
