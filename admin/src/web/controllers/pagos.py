@@ -1,6 +1,6 @@
 import json
 
-from flask import Blueprint, render_template, request, session, abort, flash
+from flask import blueprint, render_template, request, session, abort, flash
 
 from src.core import configuracion_sistema
 from src.core import socios
@@ -11,7 +11,7 @@ from src.web.decorators.login import login_requerido
 from src.web.controllers.validators.common_validators import is_integer
 
 
-pago_blueprint = Blueprint("pagos", __name__, url_prefix = "/pagos")
+pago_blueprint = blueprint("pagos", __nombre__, prefijo_url = "/pagos")
 
 
 def pagos_json(id):
@@ -45,9 +45,9 @@ def pagos_socios(id):
     if (not is_integer(id)) or (socios.buscar_socio(id) is None):
         return abort(404)
 
-    page = request.args.get("page", 1, type = int)
+    pagina = request.args.get("page", 1, tipo = int)
     kwargs = {
-        "pagos": pagos.listar_pagos_socio(id, page),
+        "pagos": pagos.listar_pagos_socio(id, pagina),
         "id_socio": id,
     }
     return render_template("pagos/pagos_socio.html", **kwargs)
@@ -103,7 +103,7 @@ def generar_recibo(id):
         "pago": pagos.get_cuota(id),
     }
     if data_pago["pago"].estado:
-        output = recibo_PDF.generar_recibo_PDF(data_pago)
-        return output
+        salida = recibo_PDF.generar_recibo_PDF(data_pago)
+        return salida
     else:
         return pagos_socios(data_pago["pago"].socio.id)

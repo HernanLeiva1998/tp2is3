@@ -1,6 +1,6 @@
 import json
 
-from flask import blueprint, render_template, request, redirect, flash, session, abort
+from flask import Blueprint, render_template, request, redirect, flash, session, abort
 
 from src.core import disciplinas
 from src.core import usuarios
@@ -10,7 +10,7 @@ from src.web.helpers.permission import has_permission
 from src.web.decorators.login import login_requerido
 
 
-disciplina_blueprint = blueprint("disciplinas", __name__, url_prefix = "/disciplinas")
+disciplina_blueprint = Blueprint("disciplinas", __nombre__, prefijo_url = "/disciplinas")
 
 
 def disciplina_json():
@@ -32,9 +32,9 @@ def disciplina_index():
     request. Si no hay request, la página será la primera"""
     if not (has_permission(session["user"], "disciplina_index")):
         return abort(403)
-    page = request.args.get("page", 1, type = int)
+    pagina = request.args.get("page", 1, tipo = int)
     kwargs = {
-        "disciplinas": disciplinas.listar_disciplinas(page),
+        "disciplinas": disciplinas.listar_disciplinas(pagina),
         "usuario": usuarios.buscar_usuario_email(session["user"]),
     }
     return render_template("disciplinas/index.html", **kwargs)
@@ -81,8 +81,8 @@ def disciplina_add():
         "costo": request.form.get("costo"),
         "habilitada": request.form.get("habilitada"),
     }
-    inputs_validos, mensaje = validator_disciplinas.validar_inputs(data_disciplina)
-    if not inputs_validos:
+    entradas_validos, mensaje = validador_disciplinas.validar_entradas(data_disciplina)
+    if not entradas_validos:
         flash(mensaje)
         return redirect("/disciplinas/alta-disciplina")
 
@@ -117,8 +117,8 @@ def disciplina_update():
         "costo": request.form.get("costo"),
         "habilitada": request.form.get("habilitada"),
     }
-    inputs_validos, mensaje = validator_disciplinas.validar_inputs(data_disciplina)
-    if not inputs_validos:
+    entradas_validas, mensaje = validador_disciplinas.validar_entradas(data_disciplina)
+    if not entradas_validas:
         flash(mensaje)
         return redirect("/disciplinas/" + data_disciplina["id"])
     data_disciplina["nombre"] = data_disciplina["nombre"].capitalize()
@@ -137,7 +137,7 @@ def disciplina_update():
     return redirect("/disciplinas")
 
 
-@disciplina_blueprint.route("/eliminar/<id>", methods = ["DELETE", "GET"])
+@disciplina_blueprint.route("/eliminar/<id>", metodos = ["DELETE", "GET"])
 @login_requerido
 def disciplina_delete(id):
     """Le dice al modelo que borre la disciplina enviada"""
