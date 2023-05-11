@@ -120,9 +120,9 @@ def socio_agregar():
     if not validacion:
         flash(mensaje)
         return redirect("/socios/alta-socio")
-    data_socio["activo"] = True
-    data_socio["nombre"] = datos_socio["nombre"].capitalize()
-    data_socio["apellido"] = datos_socio["apellido"].capitalize()
+    datos_socio["activo"] = True
+    datos_socio["nombre"] = datos_socio["nombre"].capitalize()
+    datos_socio["apellido"] = datos_socio["apellido"].capitalize()
 
     socio = socios.agregar_socio(datos_socio)
     pagos.generar_pagos(socio.id)
@@ -198,8 +198,8 @@ def exportar_csv():
         else None
     )
     datos_socio = socios.todos_los_socios(apellido, tipo)
-    output = socios_CSV.generar_CSV(datos_socio)
-    return output
+    salida = socios_CSV.generar_CSV(datos_socio)
+    return salida
 
 
 @socio_blueprint.route("/exportar-pdf")
@@ -218,8 +218,8 @@ def exportar_pdf():
         else None
     )
     datos_socio = socios.todos_los_socios(apellido, tipo)
-    output = socios_PDF.generar_PDF(datos_socio)
-    return output
+    salida = socios_PDF.generar_PDF(datos_socio)
+    return salida
 
 
 @socio_blueprint.route("/inscripcion-socio/<id>")
@@ -242,12 +242,12 @@ def inscripcion_socio(id):
 
 @socio_blueprint.post("/inscripcion")
 @login_requerido
-def add_inscripcion():
+def agregar_inscripcion():
     """Esta funcion realiza la inscripcion
     de un socio a una disciplina"""
     id_socio = request.form.get("id_socio")
     id_disciplina = request.form.get("categoria")
-    validacion_inputs, message = validator_socio.validar_inscripcion(
+    validacion_inputs, mensaje = validator_socio.validar_inscripcion(
         id_socio, id_disciplina
     )
     if validacion_inputs:
@@ -261,5 +261,5 @@ def add_inscripcion():
             flash("La disciplina o el socio no están habilitados.")
             return redirect("/socios/inscripcion-socio/" + id_socio)
     else:
-        flash(message)
+        flash(mensaje)
         return redirect("/socios/inscripcion-socio/" + id_socio)
