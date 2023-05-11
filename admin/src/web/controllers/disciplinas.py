@@ -1,6 +1,7 @@
 import json
 
-from flask import Blueprint, render_template, request, redirect, flash, session, abort
+from flask import Blueprint, render_template
+from flask import request, redirect, flash, session, abort
 
 from src.core import disciplinas
 from src.core import usuarios
