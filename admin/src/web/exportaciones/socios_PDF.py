@@ -4,7 +4,7 @@ from datetime import datetime
 from flask import make_response
 
 
-class PDF(FPDF):
+class Pdf(FPDF):
     def header(self):
         self.set_font("Arial", "B", 12)
         self.set_xy(0, 0)
@@ -18,10 +18,10 @@ class PDF(FPDF):
         self.cell(0, 10, "Page" + str(self.page_no()) + "/{nb}", 0, 0, "C")
 
 
-def generar_PDF(data_socios):
+def generar_PDF(datos_socios):
     """Esta funcion genera un PDF con los datos de todos los socios"""
     cant_socios = 0
-    pdf = PDF()
+    pdf = Pdf()
     pdf.add_page()
     pdf.alias_nb_pages()
     pdf.set_font("Arial", "B", 16)
@@ -37,7 +37,7 @@ def generar_PDF(data_socios):
     pdf.cell(30, y_height, "Genero", border = 1)
     pdf.cell(40, y_height, "Direccion", border = 1, ln = 1)
     pdf.set_font("Arial", "", 12)
-    for socio in data_socios:
+    for socio in datos_socios:
         cant_socios += 1
         if cant_socios == 41:
             pdf.add_page()
@@ -49,8 +49,8 @@ def generar_PDF(data_socios):
         pdf.cell(25, y_height, socio["telefono"], border = 1)
         pdf.cell(30, y_height, socio["genero"], border = 1)
         pdf.cell(40, y_height, socio["direccion"], border = 1, ln = 1)
-    response = make_response(pdf.output(dest = "S").encode("latin-1"))
-    response.headers.set("Content-Disposition",
+    respuesta = make_response(pdf.output(dest = "S").encode("latin-1"))
+    respuesta.headers.set("Content-Disposition",
                          "attachment", filename="socios" + ".pdf")
-    response.headers.set("Content-Type", "application/pdf")
-    return response
+    respuesta.headers.set("Content-Type", "application/pdf")
+    return respuesta
