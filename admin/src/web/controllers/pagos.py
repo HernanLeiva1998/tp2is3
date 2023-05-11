@@ -1,6 +1,7 @@
 import json
 
-from flask import blueprint, render_template, request, session, abort, flash
+from flask import blueprint, render_template
+from flask import request, session, abort, flash
 
 from src.core import configuracion_sistema
 from src.core import socios
