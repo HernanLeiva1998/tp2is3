@@ -22,7 +22,7 @@ from src.web.exportaciones import carnet_PDF
 from src.web.exportaciones.UploadForm import UploadForm, photos
 from src.web.helpers.permission import has_permission
 from src.web.decorators.login import login_requerido
-from src.web.controllers.validators.common_validators import is_integer
+from src.web.controllers.validators.common_validators import es_entero
 
 
 carnet_blueprint = Blueprint("carnet", __name__, url_prefix = "/carnet")
@@ -46,7 +46,7 @@ def cargar_imagen(id):
 
     if not (has_permission(session["user"], "carnet_upload")):
         return abort(403)
-    if (not is_integer(id)) or (buscar_socio(id) is None):
+    if (not es_entero(id)) or (buscar_socio(id) is None):
         return abort(404)
 
     socio = buscar_socio(id)
@@ -78,7 +78,7 @@ def ver_licencia(id):
     """Maneja el módulo de mostrar el carnet de un socio existente."""
     if not (has_permission(session["user"], "carnet_license")):
         return abort(403)
-    if (not is_integer(id)) or (buscar_socio(id) is None):
+    if (not es_entero(id)) or (buscar_socio(id) is None):
         return abort(404)
 
     socio = buscar_socio(id)
@@ -121,7 +121,7 @@ def descarga_carnet_pdf(id):
     al id que se recibe como parámetro"""
     if not (has_permission(session["user"], "carnet_download")):
         return abort(403)
-    if (not is_integer(id)) or (buscar_socio(id) is None):
+    if (not es_entero(id)) or (buscar_socio(id) is None):
         return abort(404)
 
     socio = buscar_socio(id)
